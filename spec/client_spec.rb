@@ -1,6 +1,5 @@
 require_relative './spec_helper'
 
-ENV['QS_AUTH_BACKEND_URL'] = 'http://auth-backend.dev'
 AUTH_APP = Auth::Backend::App.new(test: true)
 
 require 'auth-backend/test_helpers'
@@ -14,7 +13,7 @@ end
 
 describe Auth::Client do
   before do
-    @client = Auth::Client.new(adapter: [:rack, AUTH_APP])
+    @client = Auth::Client.new('http://auth-backend.dev', adapter: [:rack, AUTH_APP])
   end
 
   it "knows that an invalid token is invalid" do

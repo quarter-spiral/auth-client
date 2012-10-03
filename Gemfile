@@ -7,7 +7,7 @@ gemspec
 group :development do
   gem 'rake'
 
-  gem 'auth-backend', path: '../auth-backend'
+  gem 'auth-backend', '~> 0.0.3'
   gem 'sqlite3'
   gem 'sinatra_warden', git: 'https://github.com/quarter-spiral/sinatra_warden.git'
   gem 'songkick-oauth2-provider', git: 'https://github.com/quarter-spiral/oauth2-provider.git'
