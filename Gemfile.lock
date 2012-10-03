@@ -20,7 +20,7 @@ PATH
   remote: .
   specs:
     auth-client (0.0.4)
-      service-client (= 0.0.6)
+      service-client (>= 0.0.6)
 
 PATH
   remote: ../auth-backend
