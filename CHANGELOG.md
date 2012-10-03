@@ -1,3 +1,7 @@
+# 0.0.5
+
+* Makes auth-client dependency a lot more flexible
+
 # 0.0.4
 
 * Bumps auth-client
