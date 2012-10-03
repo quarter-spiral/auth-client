@@ -1,3 +1,7 @@
+# 0.0.6
+
+* Passing backend url into initialization
+
 # 0.0.5
 
 * Makes auth-client dependency a lot more flexible
