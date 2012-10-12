@@ -29,6 +29,16 @@ describe Auth::Client do
   end
 
   it "returns information about the token owner for a valid token" do
-    @client.token_owner(token).must_equal('uuid' => user['uuid'], 'name' => user['name'], 'email' => user['email'])
+    @client.token_owner(token).must_equal('uuid' => user['uuid'], 'name' => user['name'], 'email' => user['email'], 'type' => 'user')
+  end
+
+  it "can create tokens for apps" do
+    app = auth_helpers.create_app!
+    app_token = @client.create_app_token(app[:id], app[:secret])['token']
+    app_token.wont_be_empty
+
+    info = @client.token_owner(app_token)
+    info.wont_be_nil
+    info['type'].must_equal 'app'
   end
 end
