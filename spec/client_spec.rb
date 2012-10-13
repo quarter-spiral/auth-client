@@ -34,7 +34,7 @@ describe Auth::Client do
 
   it "can create tokens for apps" do
     app = auth_helpers.create_app!
-    app_token = @client.create_app_token(app[:id], app[:secret])['token']
+    app_token = @client.create_app_token(app[:id], app[:secret])
     app_token.wont_be_empty
 
     info = @client.token_owner(app_token)

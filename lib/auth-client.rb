@@ -29,7 +29,7 @@ module Auth
       response = @adapter.request(:post, @app_token_url, '', headers: headers)
 
       raise "Invalid app data" unless response.status == 201
-      JSON.parse(response.body.first)
+      JSON.parse(response.body.first)['token']
     end
   end
 end
