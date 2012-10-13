@@ -1,3 +1,7 @@
+# 0.0.8
+
+* Fixes a bug in the exposed interface for ``#create_app_token``
+
 # 0.0.7
 
 * Makes it possible to use the app token generation API
