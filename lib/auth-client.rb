@@ -23,7 +23,7 @@ module Auth
     end
 
     def create_app_token(app_id, app_secret)
-      auth_string = Base64.encode64("#{app_id}:#{app_secret}")
+      auth_string = Base64.encode64("#{app_id}:#{app_secret}").gsub("\n",'')
 
       headers = {'Authorization' => "Basic #{auth_string}"}
       response = @adapter.request(:post, @app_token_url, '', headers: headers)
