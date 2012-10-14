@@ -1,3 +1,7 @@
+# 0.0.9
+
+* Fixes a bug that occured when creating a new app OAuth token on some servers due to the Base64 handling of Ruby (which inserts a new-line character every 60 characters)
+
 # 0.0.8
 
 * Fixes a bug in the exposed interface for ``#create_app_token``
