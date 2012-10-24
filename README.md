@@ -24,3 +24,15 @@ client.token_valid?(your_token) # => true/false
 client = Auth::Client.new(auth_backend_url)
 client.token_owner(your_token) # => {'uuid' => 'some-uuid', 'name' => 'John', 'email' => 'john@example.com'}
 ```
+
+## Create a token for a venue user
+
+```ruby
+venue_options = {
+  venue_id: '053324235',
+  name:     'Peter Smith',
+  email:    'peter@example.com'
+}
+client = Auth::Client.new(auth_backend_url)
+client.venue_token(app_token, 'facebook', venue_options) # => '123456...'
+```

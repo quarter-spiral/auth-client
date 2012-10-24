@@ -41,4 +41,19 @@ describe Auth::Client do
     info.wont_be_nil
     info['type'].must_equal 'app'
   end
+
+  it "can create venue tokens" do
+    app = auth_helpers.create_app!
+    app_token = @client.create_app_token(app[:id], app[:secret])
+
+    venue_data = {
+      'venue-id' => '12345',
+      'name' => 'Peter Smith',
+      'email' => 'peter@example.com'
+    }
+
+    venue_token = @client.venue_token(app_token, 'facebook', venue_data)
+
+    @client.token_owner(venue_token)['name'].must_equal 'Peter Smith'
+  end
 end

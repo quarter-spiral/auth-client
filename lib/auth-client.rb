@@ -10,6 +10,7 @@ module Auth
       @token_url = File.join(url, 'api/v1/verify')
       @token_owner_url = File.join(url, 'api/v1/me')
       @app_token_url = File.join(url, 'api/v1/token/app')
+      @venue_token_url = File.join(url, 'api/v1/token/venue')
     end
 
     def token_valid?(token)
@@ -30,6 +31,19 @@ module Auth
 
       raise "Invalid app data" unless response.status == 201
       JSON.parse(response.body.first)['token']
+    end
+
+    def venue_token(app_token, venue, venue_data)
+      response = @adapter.request(:post, "#{@venue_token_url}/#{venue}", JSON.dump(venue_data), headers: {'Authorization' => "Bearer #{app_token}"})
+
+      case response.status
+      when 403
+        raise "Forbidden"
+      when 201
+        JSON.parse(response.body.first)['token']
+       else
+         raise "Couldn't create venue token!"
+      end
     end
   end
 end
