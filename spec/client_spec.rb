@@ -1,6 +1,31 @@
 require_relative './spec_helper'
 
+GRAPH_BACKEND = Graph::Backend::API.new
+module Auth::Backend
+  class Connection
+    alias raw_initialize initialize
+    def initialize(*args)
+      result = raw_initialize(*args)
+
+      graph_adapter = Service::Client::Adapter::Faraday.new(adapter: [:rack, GRAPH_BACKEND])
+      @graph.client.raw.adapter = graph_adapter
+    end
+  end
+end
+
 AUTH_APP = Auth::Backend::App.new(test: true)
+
+AUTH_CLIENT = Auth::Client.new('http://auth-backend.dev', adapter: [:rack, AUTH_APP])
+
+module Graph::Backend
+  class Connection
+    alias raw_initialize initialize
+    def initialize(*args)
+      raw_initialize(*args)
+      @auth = AUTH_CLIENT
+    end
+  end
+end
 
 require 'auth-backend/test_helpers'
 auth_helpers = Auth::Backend::TestHelpers.new(AUTH_APP)
@@ -13,7 +38,7 @@ end
 
 describe Auth::Client do
   before do
-    @client = Auth::Client.new('http://auth-backend.dev', adapter: [:rack, AUTH_APP])
+    @client = AUTH_CLIENT
   end
 
   it "knows that an invalid token is invalid" do
@@ -55,5 +80,87 @@ describe Auth::Client do
     venue_token = @client.venue_token(app_token, 'facebook', venue_data)
 
     @client.token_owner(venue_token)['name'].must_equal 'Peter Smith'
+  end
+
+  it "can retrieve a users venue identities" do
+    app = auth_helpers.create_app!
+    app_token = @client.create_app_token(app[:id], app[:secret])
+
+    venue_data = {
+      'venue-id' => '12345',
+      'name' => 'Peter Smith',
+      'email' => 'peter@example.com'
+    }
+
+    venue_token = @client.venue_token(app_token, 'facebook', venue_data)
+    uuid = @client.token_owner(venue_token)['uuid']
+
+    @client.venue_identities_of(venue_token, uuid).must_equal(
+      'facebook' => {'id' => '12345', 'name' => 'Peter Smith'}
+    )
+  end
+
+  describe "with some venue data" do
+    before do
+      @venue_data1 = {
+        'venue-id' => '12345',
+        'name' => 'Peter Smith',
+        'email' => 'peter@example.com'
+      }
+
+      @venue_data2 = {
+        'venue-id' => '4759837',
+        'name' => 'Sam Samson',
+        'email' => 'sam@example.com'
+      }
+
+      @venue_data3 = {
+        'venue-id' => '90235',
+        'name' => 'Tim Tom',
+        'email' => 'timtom@example.com'
+      }
+
+      @app = auth_helpers.create_app!
+      @app_token = @client.create_app_token(@app[:id], @app[:secret])
+    end
+
+    it "can retrieve the venue identities from multiple users at once" do
+      venue_token = @client.venue_token(@app_token, 'facebook', @venue_data1)
+      uuid1 = @client.token_owner(venue_token)['uuid']
+      venue_token = @client.venue_token(@app_token, 'galaxy-spiral', @venue_data2)
+      uuid2 = @client.token_owner(venue_token)['uuid']
+      venue_token = @client.venue_token(@app_token, 'facebook', @venue_data3)
+      uuid3 = @client.token_owner(venue_token)['uuid']
+
+      @client.venue_identities_of(venue_token, uuid1, uuid2, uuid3).must_equal(
+        uuid1 => {
+          'facebook' => {'id' => @venue_data1['venue-id'], 'name' => @venue_data1['name']}
+        },
+        uuid2 => {
+          'galaxy-spiral' => {'id' => @venue_data2['venue-id'], 'name' => @venue_data2['name']}
+        },
+        uuid3 => {
+          'facebook' => {'id' => @venue_data3['venue-id'], 'name' => @venue_data3['name']}
+        }
+      )
+    end
+
+    it "can translate a batch of venue information to QS UUIDs" do
+      uuids = @client.uuids_of(@app_token, 'facebook' => [@venue_data1, @venue_data3], 'galaxy-spiral' => [@venue_data2])
+
+      venue_token = @client.venue_token(@app_token, 'facebook', @venue_data1)
+      uuid1 = @client.token_owner(venue_token)['uuid']
+      venue_token = @client.venue_token(@app_token, 'galaxy-spiral', @venue_data2)
+      uuid2 = @client.token_owner(venue_token)['uuid']
+      venue_token = @client.venue_token(@app_token, 'facebook', @venue_data3)
+      uuid3 = @client.token_owner(venue_token)['uuid']
+
+      uuids['facebook'].keys.size.must_equal 2
+      uuids['facebook'][@venue_data1['venue-id']].must_equal uuid1
+      uuids['facebook'][@venue_data3['venue-id']].must_equal uuid3
+
+      uuids['galaxy-spiral'].keys.size.must_equal 1
+      uuids['galaxy-spiral'][@venue_data2['venue-id']].must_equal uuid2
+    end
   end
 end

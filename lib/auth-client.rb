@@ -11,6 +11,8 @@ module Auth
       @token_owner_url = File.join(url, 'api/v1/me')
       @app_token_url = File.join(url, 'api/v1/token/app')
       @venue_token_url = File.join(url, 'api/v1/token/venue')
+      @venue_identities_url = File.join(url, 'api/v1/users/batch/identities')
+      @uuids_batch_url = File.join(url, 'api/v1/uuids/batch')
     end
 
     def token_valid?(token)
@@ -43,6 +45,33 @@ module Auth
         JSON.parse(response.body.first)['token']
        else
          raise "Couldn't create venue token!"
+      end
+    end
+
+    def venue_identities_of(token, *uuids)
+      response = @adapter.request(:get, @venue_identities_url, JSON.dump(uuids), headers: {'Authorization' => "Bearer #{token}"})
+      case response.status
+      when 403
+        raise "Forbidden"
+      when 200
+        data = JSON.parse(response.body.first)
+        data = Hash[data.map {|k,v| [k, v['venues']]}]
+
+        data.size == 1 ? data.values.first : data
+      else
+        raise "Error retrieving the venue identities of #{uuids}"
+      end
+    end
+
+    def uuids_of(token, venue_params)
+      response = @adapter.request(:post, @uuids_batch_url, JSON.dump(venue_params), headers: {'Authorization' => "Bearer #{token}"})
+      case response.status
+      when 403
+        raise "Forbidden"
+      when 200
+        JSON.parse(response.body.first)
+      else
+        raise "Error retrieving the uuids!"
       end
     end
   end

@@ -1,3 +1,8 @@
+# 0.0.11 WIP
+
+* Adds venue identity retrieval
+* Adds batch uuid retrieval capabilites
+
 # 0.0.10
 
 * Adds auth-backend's venue token capabilities to the client

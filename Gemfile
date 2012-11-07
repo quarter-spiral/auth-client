@@ -7,7 +7,8 @@ gemspec
 group :development do
   gem 'rake'
 
-  gem 'auth-backend', '~> 0.0.7'
+  gem 'graph-backend', '~> 0.0.10'
+  gem 'auth-backend', '~> 0.0.9'
   gem 'nokogiri'
   gem 'sqlite3'
   gem 'sinatra_warden', git: 'https://github.com/quarter-spiral/sinatra_warden.git'

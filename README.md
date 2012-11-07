@@ -29,10 +29,55 @@ client.token_owner(your_token) # => {'uuid' => 'some-uuid', 'name' => 'John', 'e
 
 ```ruby
 venue_options = {
-  venue_id: '053324235',
+  venue-id: '053324235',
   name:     'Peter Smith',
   email:    'peter@example.com'
 }
 client = Auth::Client.new(auth_backend_url)
 client.venue_token(app_token, 'facebook', venue_options) # => '123456...'
+```
+
+## Retrieve a user's venue identities
+
+```ruby
+client = Auth::Client.new(auth_backend_url)
+venues = client.venue_identities_of(token, user_uuid)
+venues # => {'facebook' => {'id' => '1234', name => 'Peter Smith'}}
+```
+
+## Retrieve venue identities for multiple users at once
+
+```ruby
+client = Auth::Client.new(auth_backend_url)
+user_venues = client.venue_identities_of(token, user_uuid1, user_uuid2, user_uuid3)
+user_venues[user_uuid1] # => {'facebook' => {'id' => '1234', name => 'Peter Smith'}}
+…
+```
+
+## Retrieve UUIDs for a batch of users identified by their venue
+ientities
+
+```ruby
+client = Auth::Client.new(auth_backend_url)
+venue_data = {
+  "facebook" => [
+    {"venue-id" => "053324235", "name" => "Peter Smith"},
+    {"venue-id" => "489574598", "name" => "Sam Jackson"}
+  ],
+  "galaxy-spiral" => [
+    {"venue-id" => "562090343", "name" => "Jack Tumbler"}
+  ]
+}
+
+uuids = client.uuids_of(token, venue_data)
+
+uuids # => {
+      #      'facebook' => {
+      #        '053324235' => '9643598988',
+      #        '489574598' => '8934098502'
+      #      },
+      #      'galaxy-spiral' => {
+      #        '562090343' => '8350483509'
+      #      }
+      #    }
 ```

@@ -7,3 +7,4 @@ require 'rack/client'
 
 require 'auth-client'
 require 'auth-backend'
+require 'graph-backend'
