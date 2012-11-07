@@ -29,9 +29,9 @@ client.token_owner(your_token) # => {'uuid' => 'some-uuid', 'name' => 'John', 'e
 
 ```ruby
 venue_options = {
-  venue-id: '053324235',
-  name:     'Peter Smith',
-  email:    'peter@example.com'
+  "venue-id" => '053324235',
+  "name" =>     'Peter Smith',
+  "email" =>    'peter@example.com'
 }
 client = Auth::Client.new(auth_backend_url)
 client.venue_token(app_token, 'facebook', venue_options) # => '123456...'
