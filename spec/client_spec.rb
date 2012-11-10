@@ -145,6 +145,42 @@ describe Auth::Client do
       )
     end
 
+    it "can attach venue identities to a user" do
+      fb_venue_id = {"venue-id" => '85464854', "name" => "Peter S"}
+      gs_venue_id = {"venue-id" => "465675795", "name" => "P Smith"}
+
+      uuid = user['uuid']
+      @client.venue_identities_of(token, uuid).empty?.must_equal true
+
+      @client.attach_venue_identity_to(token, uuid, 'facebook',fb_venue_id)
+      @client.attach_venue_identity_to(token, uuid, 'galaxy-spiral', gs_venue_id)
+
+      identities = @client.venue_identities_of(token, uuid)
+      identities.keys.size.must_equal 2
+      identities['facebook'].must_equal("id" => fb_venue_id['venue-id'], "name" => fb_venue_id['name'])
+      identities['galaxy-spiral'].must_equal("id" => gs_venue_id['venue-id'], 'name' => gs_venue_id['name'])
+    end
+
+    it "fails on attaching the same id twice" do
+      venue_id = {"venue-id" => '295758978', "name" => "Peter S"}
+      venue_token = @client.venue_token(@app_token, 'facebook', venue_id)
+      uuid = @client.token_owner(venue_token)['uuid']
+      lambda {
+        @client.attach_venue_identity_to(venue_token, uuid, 'facebook', venue_id)
+      }.must_raise Service::Client::ServiceError
+    end
+
+    it "fails on attaching two ids of the same venue to one user" do
+      fb_venue_id1 = {"venue-id" => '56758492', "name" => "Peter S"}
+      fb_venue_id2 = {"venue-id" => '94879502', "name" => "P Smith"}
+
+      venue_token = @client.venue_token(@app_token, 'facebook', fb_venue_id1)
+      uuid = @client.token_owner(venue_token)['uuid']
+      lambda {
+        @client.attach_venue_identity_to(venue_token, uuid, 'facebook', fb_venue_id2)
+      }.must_raise Service::Client::ServiceError
+    end
+
     it "can translate a batch of venue information to QS UUIDs" do
       uuids = @client.uuids_of(@app_token, 'facebook' => [@venue_data1, @venue_data3], 'galaxy-spiral' => [@venue_data2])
 

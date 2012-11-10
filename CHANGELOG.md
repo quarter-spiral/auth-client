@@ -1,3 +1,7 @@
+# 0.0.12 WIP
+
+* Adds the ability to attach venue identities to an existing user
+
 # 0.0.11
 
 * Adds venue identity retrieval

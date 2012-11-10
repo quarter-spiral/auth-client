@@ -12,6 +12,8 @@ module Auth
       @app_token_url = File.join(url, 'api/v1/token/app')
       @venue_token_url = File.join(url, 'api/v1/token/venue')
       @venue_identities_url = File.join(url, 'api/v1/users/batch/identities')
+      @attach_venue_identity_url = File.join(url, 'api/v1/users/%s/identities')
+
       @uuids_batch_url = File.join(url, 'api/v1/uuids/batch')
     end
 
@@ -53,6 +55,8 @@ module Auth
       case response.status
       when 403
         raise "Forbidden"
+      when 404
+        raise Service::Client::ServiceError.new("One of the venue ids not found: #{uuids}")
       when 200
         data = JSON.parse(response.body.first)
         data = Hash[data.map {|k,v| [k, v['venues']]}]
@@ -60,6 +64,20 @@ module Auth
         data.size == 1 ? data.values.first : data
       else
         raise "Error retrieving the venue identities of #{uuids}"
+      end
+    end
+
+    def attach_venue_identity_to(token, uuid, venue, venue_identity)
+      url = @attach_venue_identity_url % uuid
+      response = @adapter.request(:post, url, JSON.dump(venue => venue_identity), headers: {"Authorization" => "Bearer #{token}"})
+      case response.status
+      when 422
+        error = JSON.parse(response.body.first)['error']
+        raise Service::Client::ServiceError.new(error)
+      when 201
+        true
+      else
+        raise "Unexpected error while attaching venue ids"
       end
     end
 
