@@ -72,7 +72,7 @@ venue_data = {
     {"venue-id" => "053324235", "name" => "Peter Smith"},
     {"venue-id" => "489574598", "name" => "Sam Jackson"}
   ],
-  "galaxy-spiral" => [
+  "spiral-galaxy" => [
     {"venue-id" => "562090343", "name" => "Jack Tumbler"}
   ]
 }
@@ -84,7 +84,7 @@ uuids # => {
       #        '053324235' => '9643598988',
       #        '489574598' => '8934098502'
       #      },
-      #      'galaxy-spiral' => {
+      #      'spiral-galaxy' => {
       #        '562090343' => '8350483509'
       #      }
       #    }
