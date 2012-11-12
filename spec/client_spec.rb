@@ -127,7 +127,7 @@ describe Auth::Client do
     it "can retrieve the venue identities from multiple users at once" do
       venue_token = @client.venue_token(@app_token, 'facebook', @venue_data1)
       uuid1 = @client.token_owner(venue_token)['uuid']
-      venue_token = @client.venue_token(@app_token, 'galaxy-spiral', @venue_data2)
+      venue_token = @client.venue_token(@app_token, 'spiral-galaxy', @venue_data2)
       uuid2 = @client.token_owner(venue_token)['uuid']
       venue_token = @client.venue_token(@app_token, 'facebook', @venue_data3)
       uuid3 = @client.token_owner(venue_token)['uuid']
@@ -137,7 +137,7 @@ describe Auth::Client do
           'facebook' => {'id' => @venue_data1['venue-id'], 'name' => @venue_data1['name']}
         },
         uuid2 => {
-          'galaxy-spiral' => {'id' => @venue_data2['venue-id'], 'name' => @venue_data2['name']}
+          'spiral-galaxy' => {'id' => @venue_data2['venue-id'], 'name' => @venue_data2['name']}
         },
         uuid3 => {
           'facebook' => {'id' => @venue_data3['venue-id'], 'name' => @venue_data3['name']}
@@ -153,12 +153,12 @@ describe Auth::Client do
       @client.venue_identities_of(token, uuid).empty?.must_equal true
 
       @client.attach_venue_identity_to(token, uuid, 'facebook',fb_venue_id)
-      @client.attach_venue_identity_to(token, uuid, 'galaxy-spiral', gs_venue_id)
+      @client.attach_venue_identity_to(token, uuid, 'spiral-galaxy', gs_venue_id)
 
       identities = @client.venue_identities_of(token, uuid)
       identities.keys.size.must_equal 2
       identities['facebook'].must_equal("id" => fb_venue_id['venue-id'], "name" => fb_venue_id['name'])
-      identities['galaxy-spiral'].must_equal("id" => gs_venue_id['venue-id'], 'name' => gs_venue_id['name'])
+      identities['spiral-galaxy'].must_equal("id" => gs_venue_id['venue-id'], 'name' => gs_venue_id['name'])
     end
 
     it "fails on attaching the same id twice" do
@@ -182,11 +182,11 @@ describe Auth::Client do
     end
 
     it "can translate a batch of venue information to QS UUIDs" do
-      uuids = @client.uuids_of(@app_token, 'facebook' => [@venue_data1, @venue_data3], 'galaxy-spiral' => [@venue_data2])
+      uuids = @client.uuids_of(@app_token, 'facebook' => [@venue_data1, @venue_data3], 'spiral-galaxy' => [@venue_data2])
 
       venue_token = @client.venue_token(@app_token, 'facebook', @venue_data1)
       uuid1 = @client.token_owner(venue_token)['uuid']
-      venue_token = @client.venue_token(@app_token, 'galaxy-spiral', @venue_data2)
+      venue_token = @client.venue_token(@app_token, 'spiral-galaxy', @venue_data2)
       uuid2 = @client.token_owner(venue_token)['uuid']
       venue_token = @client.venue_token(@app_token, 'facebook', @venue_data3)
       uuid3 = @client.token_owner(venue_token)['uuid']
@@ -195,8 +195,8 @@ describe Auth::Client do
       uuids['facebook'][@venue_data1['venue-id']].must_equal uuid1
       uuids['facebook'][@venue_data3['venue-id']].must_equal uuid3
 
-      uuids['galaxy-spiral'].keys.size.must_equal 1
-      uuids['galaxy-spiral'][@venue_data2['venue-id']].must_equal uuid2
+      uuids['spiral-galaxy'].keys.size.must_equal 1
+      uuids['spiral-galaxy'][@venue_data2['venue-id']].must_equal uuid2
     end
   end
 end

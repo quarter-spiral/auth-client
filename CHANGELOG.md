@@ -1,3 +1,7 @@
+# 0.0.13 WIP
+
+* Renames galaxy-spiral to spiral-galaxy
+
 # 0.0.12
 
 * Adds the ability to attach venue identities to an existing user

@@ -48,7 +48,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     arel (3.0.2)
-    auth-backend (0.0.10)
+    auth-backend (0.0.11)
       activerecord
       bcrypt-ruby
       graph-client
@@ -163,7 +163,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  auth-backend (~> 0.0.10)
+  auth-backend (~> 0.0.11)
   auth-client!
   graph-backend (~> 0.0.10)
   json
