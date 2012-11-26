@@ -1,4 +1,4 @@
-# 0.0.14 WIP
+# 0.0.14
 
 * Bumps auth-backend and graph-backend for specs
 * Refactors galaxy-spiral to spiral-galaxy in the README
