@@ -59,7 +59,8 @@ user_venues[user_uuid1] # => {'facebook' => {'id' => '1234', name => 'Peter Smit
 ```ruby
 client = Auth::Client.new(auth_backend_url)
 venue_identity = {"venue-id" => "053324235", "name" => "Peter Smith"}
-client.attach_venue_identity_to(token, uuid, venue_identity)
+venue = 'facebook'
+client.attach_venue_identity_to(token, uuid, venue, venue_identity)
 ```
 
 ## Retrieve UUIDs for a batch of users identified by their venue

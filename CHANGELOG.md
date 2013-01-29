@@ -1,3 +1,7 @@
+# 0.0.15 WIP
+
+* Fixes glitch in documentation
+
 # 0.0.14
 
 * Bumps auth-backend and graph-backend for specs
