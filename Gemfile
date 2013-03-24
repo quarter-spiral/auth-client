@@ -7,8 +7,13 @@ gemspec
 group :development do
   gem 'rake'
 
-  gem 'graph-backend', '~> 0.0.13'
-  gem 'auth-backend', '~> 0.0.15'
+  gem 'graph-backend', '~> 0.0.25'
+  #gem 'graph-backend', path: '../graph-backend'
+  gem 'auth-backend', '~> 0.0.29'
+  #gem 'auth-backend', path: '../auth-backend'
+  gem 'service-client', path: '../service-client'
+  gem 'graph-client', path: '../graph-client'
+
   gem 'nokogiri'
   gem 'sqlite3'
   gem 'sinatra_warden', git: 'https://github.com/quarter-spiral/sinatra_warden.git'
