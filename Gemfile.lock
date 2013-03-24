@@ -19,7 +19,7 @@ GIT
 PATH
   remote: .
   specs:
-    auth-client (0.0.14)
+    auth-client (0.0.15)
       service-client (>= 0.0.12)
 
 PATH

@@ -1,5 +1,6 @@
-# 0.0.15 WIP
+# 0.0.15
 
+* Updates dependencies
 * Fixes glitch in documentation
 
 # 0.0.14
