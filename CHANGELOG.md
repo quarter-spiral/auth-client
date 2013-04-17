@@ -1,4 +1,4 @@
-# 0.0.16 / Unreleased
+# 0.0.16 / 2013-04-17
 
 * Adds caching for token owner info
 * Fixes specs
