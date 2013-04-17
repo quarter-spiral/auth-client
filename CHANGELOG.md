@@ -1,3 +1,8 @@
+# 0.0.16 / Unreleased
+
+* Adds caching for token owner info
+* Fixes specs
+
 # 0.0.15
 
 * Updates dependencies

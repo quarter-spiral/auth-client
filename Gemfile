@@ -9,7 +9,7 @@ group :development do
 
   gem 'graph-backend', '~> 0.0.25'
   #gem 'graph-backend', path: '../graph-backend'
-  gem 'auth-backend', '~> 0.0.29'
+  gem 'auth-backend', '~> 0.0.33'
   #gem 'auth-backend', path: '../auth-backend'
   gem 'service-client', path: '../service-client'
   gem 'graph-client', path: '../graph-client'
@@ -20,4 +20,8 @@ group :development do
   gem 'songkick-oauth2-provider', git: 'https://github.com/quarter-spiral/oauth2-provider.git'
   gem 'rack-client'
   gem 'json'
+
+  gem 'cache-client', '~> 0.0.4'
+  gem 'cache-backend-inmemory', '~> 0.0.1'
+  gem 'timecop'
 end

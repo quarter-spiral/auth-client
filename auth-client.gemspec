@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'service-client', '>= 0.0.12'
+  gem.add_dependency 'cache-client', '~> 0.0.4'
 end

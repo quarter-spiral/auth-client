@@ -4,6 +4,19 @@ Client to authenticate auth tokens against the auth-backend.
 
 # Usage
 
+## Caching
+
+The auth-client is able to cache the information about the owner of any token. When enabled this information is cached for up to 10 minutes for each token.
+
+To enable caching initialize the auth-client by providing an instance of [cache-client](https://github.com/quarter-spiral/cache-client) as the ``:cache`` option:
+
+```ruby
+cache = Cache::Client.new(Cache::Backend::Inmemory)
+client = Auth::Client.new('http://auth-backend.dev', cache: cache)
+```
+
+If you do not provide a ``:cache`` option caching is disabled. Bear in mind that **token owners are the only thing that is cached**.
+
 ## Obtain an OAuth token with OAuth client/app credentials
 
 ```ruby

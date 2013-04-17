@@ -1,10 +1,17 @@
 require 'service-client'
+require 'cache-client'
 require 'auth-client/version'
 require 'base64'
 
 module Auth
   class Client
+    # Maximum TTL for cache items
+    # the actual TTL might be lower but never greater than:
+    CACHE_TTL = 10 * 60 # 10 minutes
+
     def initialize(url, options = {})
+      @cache = options.delete(:cache) || Cache::Client.new(Cache::Backend::NoopBackend)
+
       @adapter = Service::Client::Adapter::Faraday.new(options)
 
       @token_url = File.join(url, 'api/v1/verify')
@@ -23,8 +30,10 @@ module Auth
     end
 
     def token_owner(token)
-      response = @adapter.request(:get, @token_owner_url, '', headers: {'Authorization' => "Bearer #{token}"})
-      response.status == 200 ? JSON.parse(response.body.first) : nil
+      @cache.fetch(token_owner_cache_key_for(token)) do
+        response = @adapter.request(:get, @token_owner_url, '', headers: {'Authorization' => "Bearer #{token}"})
+        response.status == 200 ? JSON.parse(response.body.first) : nil
+      end
     end
 
     def create_app_token(app_id, app_secret)
@@ -56,7 +65,7 @@ module Auth
       when 403
         raise "Forbidden"
       when 404
-        raise Service::Client::ServiceError.new("One of the venue ids not found: #{uuids}")
+        {}
       when 200
         data = JSON.parse(response.body.first)
         data = Hash[data.map {|k,v| [k, v['venues']]}]
@@ -91,6 +100,11 @@ module Auth
       else
         raise "Error retrieving the uuids!"
       end
+    end
+
+    protected
+    def token_owner_cache_key_for(token)
+      ['auth', 'token_owner', token, Time.now.to_i.div(CACHE_TTL)]
     end
   end
 end
