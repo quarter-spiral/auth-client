@@ -1,4 +1,4 @@
-# 0.0.17 / Unreleased
+# 0.0.17 / 2013-08-10
 
 * Bumps service-client dependency
 
