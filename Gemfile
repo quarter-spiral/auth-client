@@ -7,12 +7,9 @@ gemspec
 group :development do
   gem 'rake'
 
-  gem 'graph-backend', '~> 0.0.25'
-  #gem 'graph-backend', path: '../graph-backend'
-  gem 'auth-backend', '~> 0.0.33'
-  #gem 'auth-backend', path: '../auth-backend'
-  gem 'service-client', path: '../service-client'
-  gem 'graph-client', path: '../graph-client'
+  gem 'graph-backend', '~> 0.0.29'
+  gem 'auth-backend', '~> 0.0.48'
+  gem 'graph-client', '~> 0.0.12'
 
   gem 'nokogiri'
   gem 'sqlite3'

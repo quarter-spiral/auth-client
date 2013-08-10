@@ -38,7 +38,13 @@ describe Auth::Client do
   end
 
   it "returns information about the token owner for a valid token" do
-    @client.token_owner(@token).must_equal('uuid' => @user['uuid'], 'name' => @user['name'], 'email' => @user['email'], 'type' => 'user')
+    token_owner = @client.token_owner(@token)
+
+    %w{uuid name email admin}.each do |field|
+      token_owner[field].must_equal @user[field]
+    end
+    token_owner['type'].must_equal 'user'
+    token_owner['firebase-token'].wont_be_nil
   end
 
   it "can create tokens for apps" do

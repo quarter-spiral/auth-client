@@ -21,21 +21,7 @@ PATH
   specs:
     auth-client (0.0.16)
       cache-client (~> 0.0.4)
-      service-client (>= 0.0.12)
-
-PATH
-  remote: ../graph-client
-  specs:
-    graph-client (0.0.12)
-      commander
-      service-client (>= 0.0.12)
-
-PATH
-  remote: ../service-client
-  specs:
-    service-client (0.0.12)
-      faraday (= 0.8.1)
-      json
+      service-client (>= 0.0.14)
 
 GEM
   remote: https://rubygems.org/
@@ -63,35 +49,52 @@ GEM
       i18n (= 0.6.1)
       multi_json (~> 1.0)
     arel (3.0.2)
-    auth-backend (0.0.33)
+    attr_required (0.0.5)
+    auth-backend (0.0.48)
       activerecord (>= 3.2.13)
-      bcrypt-ruby
+      bcrypt-ruby (~> 3.0.0)
+      facebook-client (>= 0.0.5)
+      firebase_token_generator
+      futuroscope (>= 0.1.3)
       graph-client (~> 0.0.12)
       json (~> 1.7.7)
       kaminari
       newrelic_rpm
       omniauth (~> 1.1.1)
       omniauth-facebook (~> 1.4.1)
-      padrino-helpers
+      padrino-helpers (>= 0.11.2)
       ping-middleware (~> 0.0.2)
+      playercenter-client (= 0.0.4)
       rack (~> 1.4.5)
       sinatra
       sinatra-activerecord
       sinatra-flash
       unicorn
       uuid
-    backports (2.6.7)
+    backports (3.3.3)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     cache-backend-inmemory (0.0.1)
+    cache-backend-iron-cache (0.0.4)
+      iron_cache (= 1.4.0)
+      json (>= 1.7)
     cache-client (0.0.4)
-    commander (4.1.3)
+    commander (4.1.4)
       highline (~> 1.6.11)
     descendants_tracker (0.0.1)
     erubis (2.7.0)
+    facebook-client (0.0.5)
+      fb_graph
     faraday (0.8.1)
       multipart-post (~> 1.1)
-    grape (0.4.0)
+    fb_graph (2.7.7)
+      httpclient (>= 2.2.0.2)
+      multi_json (>= 1.3)
+      rack-oauth2 (>= 0.14.4)
+      tzinfo
+    firebase_token_generator (1.0.1)
+    futuroscope (0.1.3)
+    grape (0.4.1)
       activesupport
       builder
       hashie (>= 1.2.0)
@@ -104,22 +107,31 @@ GEM
     grape_newrelic (0.0.4)
       grape (>= 0.2.2)
       newrelic_rpm (>= 3.5.4.33)
-    graph-backend (0.0.25)
-      auth-client (>= 0.0.14)
+    graph-backend (0.0.29)
+      auth-client (>= 0.0.16)
+      cache-backend-iron-cache (~> 0.0.4)
+      cache-client (~> 0.0.4)
       grape (~> 0.4.0)
       grape_newrelic (~> 0.0.4)
       json (~> 1.7.7)
       neography (= 1.0.9)
       ping-middleware (~> 0.0.2)
-    hashie (1.2.0)
-    highline (1.6.16)
-    hike (1.2.2)
-    http_router (0.10.2)
+    graph-client (0.0.12)
+      commander
+      service-client (>= 0.0.12)
+    hashie (2.0.5)
+    highline (1.6.19)
+    hike (1.2.3)
+    http_router (0.11.0)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
     httpauth (0.2.0)
-    httpclient (2.3.3)
+    httpclient (2.3.4.1)
     i18n (0.6.1)
+    iron_cache (1.4.0)
+      iron_core (>= 0.5.1)
+    iron_core (1.0.1)
+      rest (>= 2.2.0)
     journey (1.0.4)
     json (1.7.7)
     jwt (0.1.8)
@@ -130,8 +142,9 @@ GEM
     kgio (2.8.0)
     macaddr (1.6.1)
       systemu (~> 2.5.0)
+    mime-types (1.23)
     multi_json (1.7.2)
-    multi_xml (0.5.3)
+    multi_xml (0.5.5)
     multipart-post (1.2.0)
     neography (1.0.9)
       httpclient (>= 2.3.3)
@@ -140,7 +153,8 @@ GEM
       os (>= 0.9.6)
       rake (>= 0.8.7)
       rubyzip (>= 0.9.7)
-    newrelic_rpm (3.6.0.78)
+    net-http-persistent (2.9)
+    newrelic_rpm (3.6.6.147)
     nokogiri (1.5.5)
     oauth2 (0.8.1)
       faraday (~> 0.8)
@@ -148,8 +162,8 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    omniauth (1.1.3)
-      hashie (~> 1.2)
+    omniauth (1.1.4)
+      hashie (>= 1.2, < 3)
       rack
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
@@ -157,16 +171,19 @@ GEM
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
     os (0.9.6)
-    padrino-core (0.10.7)
-      activesupport (~> 3.2.0)
-      http_router (~> 0.10.2)
-      sinatra (~> 1.3.1)
-      thor (~> 0.15.2)
-      tilt (~> 1.3.0)
-    padrino-helpers (0.10.7)
+    padrino-core (0.11.3)
+      activesupport (>= 3.1, < 4.0)
+      http_router (~> 0.11.0)
+      rack-protection (>= 1.5.0)
+      sinatra (~> 1.4.2)
+      thor (~> 0.17.0)
+      tilt (~> 1.3.7)
+    padrino-helpers (0.11.3)
       i18n (~> 0.6)
-      padrino-core (= 0.10.7)
+      padrino-core (= 0.11.3)
     ping-middleware (0.0.2)
+    playercenter-client (0.0.4)
+      service-client (>= 0.0.12)
     rack (1.4.5)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -176,19 +193,33 @@ GEM
       rack (>= 1.0.0)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
-    rack-protection (1.2.0)
+    rack-oauth2 (1.0.5)
+      activesupport (>= 2.3)
+      attr_required (>= 0.0.5)
+      httpclient (>= 2.2.0.2)
+      multi_json (>= 1.3.6)
+      rack (>= 1.1)
+    rack-protection (1.5.0)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    raindrops (0.10.0)
+    raindrops (0.11.0)
     rake (10.0.2)
+    rest (2.6.3)
+      net-http-persistent
+      rest-client (>= 0.3.0)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     rubyzip (0.9.9)
-    sinatra (1.3.3)
-      rack (~> 1.3, >= 1.3.6)
-      rack-protection (~> 1.2)
-      tilt (~> 1.3, >= 1.3.3)
-    sinatra-activerecord (1.2.2)
-      activerecord (~> 3.0)
+    service-client (0.0.14)
+      faraday (= 0.8.1)
+      json
+    sinatra (1.4.3)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    sinatra-activerecord (1.2.3)
+      activerecord (>= 3.0)
       sinatra (~> 1.0)
     sinatra-flash (0.3.0)
       sinatra (>= 1.0.0)
@@ -199,11 +230,11 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.6)
     systemu (2.5.2)
-    thor (0.15.4)
-    tilt (1.3.3)
+    thor (0.17.0)
+    tilt (1.3.7)
     timecop (0.6.1)
     tzinfo (0.3.37)
-    unicorn (4.6.2)
+    unicorn (4.6.3)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -211,8 +242,8 @@ GEM
       rack
     uuid (2.3.7)
       macaddr (~> 1.0)
-    virtus (0.5.4)
-      backports (~> 2.6.1)
+    virtus (0.5.5)
+      backports (~> 3.3)
       descendants_tracker (~> 0.0.1)
     warden (1.2.1)
       rack (>= 1.0)
@@ -221,17 +252,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  auth-backend (~> 0.0.33)
+  auth-backend (~> 0.0.48)
   auth-client!
   cache-backend-inmemory (~> 0.0.1)
   cache-client (~> 0.0.4)
-  graph-backend (~> 0.0.25)
-  graph-client!
+  graph-backend (~> 0.0.29)
+  graph-client (~> 0.0.12)
   json
   nokogiri
   rack-client
   rake
-  service-client!
   sinatra_warden!
   songkick-oauth2-provider!
   sqlite3
